@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.lease.web.admin.mapper.LeaseAgreementMapper">
+
+    <resultMap id="BaseResultMap" type="com.atguigu.lease.model.entity.LeaseAgreement">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="identificationNumber" column="identification_number" jdbcType="VARCHAR"/>
+            <result property="apartmentId" column="apartment_id" jdbcType="BIGINT"/>
+            <result property="roomId" column="room_id" jdbcType="BIGINT"/>
+            <result property="leaseStartDate" column="lease_start_date" jdbcType="DATE"/>
+            <result property="leaseEndDate" column="lease_end_date" jdbcType="DATE"/>
+            <result property="leaseTermId" column="lease_term_id" jdbcType="BIGINT"/>
+            <result property="rent" column="rent" jdbcType="DECIMAL"/>
+            <result property="deposit" column="deposit" jdbcType="DECIMAL"/>
+            <result property="paymentTypeId" column="payment_type_id" jdbcType="BIGINT"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="sourceType" column="source_type" jdbcType="TINYINT"/>
+            <result property="additionalInfo" column="additional_info" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,phone,name,
+        identification_number,apartment_id,room_id,
+        lease_start_date,lease_end_date,lease_term_id,
+        rent,deposit,payment_type_id,
+        status,source_type,additional_info,
+        create_time,update_time,is_deleted
+    </sql>
+</mapper>
