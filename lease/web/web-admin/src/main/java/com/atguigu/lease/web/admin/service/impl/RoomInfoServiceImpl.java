@@ -2,8 +2,9 @@ package com.atguigu.lease.web.admin.service.impl;
 
 import com.atguigu.lease.model.entity.*;
 import com.atguigu.lease.model.enums.ItemType;
-import com.atguigu.lease.web.admin.mapper.RoomInfoMapper;
+import com.atguigu.lease.web.admin.mapper.*;
 import com.atguigu.lease.web.admin.service.*;
+import com.atguigu.lease.web.admin.vo.attr.AttrValueVo;
 import com.atguigu.lease.web.admin.vo.graph.GraphVo;
 import com.atguigu.lease.web.admin.vo.room.RoomDetailVo;
 import com.atguigu.lease.web.admin.vo.room.RoomItemVo;
@@ -13,6 +14,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -30,6 +32,26 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
     @Resource
     private RoomInfoMapper roomInfoMapper;
 
+    @Resource
+    private ApartmentInfoMapper apartmentInfoMapper;
+
+    @Resource
+    private GraphInfoMapper graphInfoMapper;
+
+    @Resource
+    private AttrValueMapper attrValueMapper;
+
+    @Resource
+    private FacilityInfoMapper facilityInfoMapper;
+
+    @Resource
+    private LabelInfoMapper labelInfoMapper;
+
+    @Resource
+    private PaymentTypeMapper paymentTypeMapper;
+
+    @Resource
+    private LeaseTermMapper leaseTermMapper;
 
     @Resource
     private GraphInfoService graphInfoService;
@@ -57,7 +79,38 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
 
     @Override
     public RoomDetailVo getDetailById(Long id) {
-        return null;
+        RoomInfo roomInfo = roomInfoMapper.selectById(id);
+        //所属公寓信息
+        ApartmentInfo apartmentInfo = apartmentInfoMapper.selectApartmentById(id);
+
+        //图片列表private List<GraphVo> graphVoList;
+        List<GraphVo> graphVoList=graphInfoMapper.selectGraphVoByItemTypeAndId(ItemType.ROOM,id);
+
+        //属性信息列表private List<AttrValueVo> attrValueVoList;
+        List<AttrValueVo> attrValueVoList=attrValueMapper.selectAttrValueVoById(id);
+
+        //配套信息列表private List<FacilityInfo> facilityInfoList;
+        List<FacilityInfo> facilityInfoList=facilityInfoMapper.selectFacilityInfoList(id);
+
+        //标签信息列表private List<LabelInfo> labelInfoList;
+        List<LabelInfo>  labelInfoList=labelInfoMapper.selectLabelById(id);
+
+        //支付方式列表private List<PaymentType> paymentTypeList;
+        List<PaymentType> paymentTypeList= paymentTypeMapper.selectPaymentTypeListById(id);
+
+        //可选租期列表private List<LeaseTerm> leaseTermList;
+        List<LeaseTerm> leaseTermList =leaseTermMapper.selectLeaseTermListById(id);
+
+        RoomDetailVo roomDetailVo = new RoomDetailVo();
+        BeanUtils.copyProperties(roomInfo,roomDetailVo);
+        roomDetailVo.setGraphVoList(graphVoList);
+        roomDetailVo.setApartmentInfo(apartmentInfo);
+        roomDetailVo.setAttrValueVoList(attrValueVoList);
+        roomDetailVo.setFacilityInfoList(facilityInfoList);
+        roomDetailVo.setLabelInfoList(labelInfoList);
+        roomDetailVo.setLeaseTermList(leaseTermList);
+        roomDetailVo.setPaymentTypeList(paymentTypeList);
+        return roomDetailVo;
     }
 
     @Override
@@ -181,6 +234,41 @@ public class RoomInfoServiceImpl extends ServiceImpl<RoomInfoMapper, RoomInfo>
             roomLeaseTermService.saveBatch(roomLeaseTermArrayList);
         }
 
+    }
+
+    @Override
+    public void removeRoomById(Long id) {
+        super.removeById(id);
+        //图片列表的删除
+        LambdaQueryWrapper<GraphInfo> graphWrapper = new LambdaQueryWrapper<>();
+        graphWrapper.eq(GraphInfo::getItemType, ItemType.ROOM);
+        graphWrapper.eq(GraphInfo::getItemId, id);
+        graphInfoService.remove(graphWrapper);
+
+        //属性值的删除
+        LambdaQueryWrapper<RoomAttrValue> attrValueWrapper = new LambdaQueryWrapper<>();
+        attrValueWrapper.eq(RoomAttrValue::getRoomId, id);
+        roomAttrValueService.remove(attrValueWrapper);
+
+        //配套信息删除
+        LambdaQueryWrapper<RoomFacility> facilityWrapper = new LambdaQueryWrapper<>();
+        facilityWrapper.eq(RoomFacility::getRoomId, id);
+        roomFacilityService.remove(facilityWrapper);
+
+        //标签信息删除
+        LambdaQueryWrapper<RoomLabel> labelWrapper = new LambdaQueryWrapper<>();
+        labelWrapper.eq(RoomLabel::getRoomId, id);
+        roomLabelService.remove(labelWrapper);
+
+        //支付方式删除
+        LambdaQueryWrapper<RoomPaymentType> paymentTypeWrapper = new LambdaQueryWrapper<>();
+        paymentTypeWrapper.eq(RoomPaymentType::getRoomId, id);
+        roomPaymentTypeService.remove(paymentTypeWrapper);
+
+        //租期关系
+        LambdaQueryWrapper<RoomLeaseTerm> roomLeaseTermWrapper = new LambdaQueryWrapper<>();
+        roomLeaseTermWrapper.eq(RoomLeaseTerm::getRoomId, id);
+        roomLeaseTermService.remove(roomLeaseTermWrapper);
     }
 }
 

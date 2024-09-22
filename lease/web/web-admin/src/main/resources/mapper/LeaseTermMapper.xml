@@ -5,16 +5,26 @@
 <mapper namespace="com.atguigu.lease.web.admin.mapper.LeaseTermMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.lease.model.entity.LeaseTerm">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="monthCount" column="month_count" jdbcType="INTEGER"/>
-            <result property="unit" column="unit" jdbcType="VARCHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="monthCount" column="month_count" jdbcType="INTEGER"/>
+        <result property="unit" column="unit" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,month_count,unit,
+        id
+        ,month_count,unit,
         create_time,update_time,is_deleted
     </sql>
+    <select id="selectLeaseTermListById" resultType="com.atguigu.lease.model.entity.LeaseTerm">
+        select id, month_count, unit
+        from lease_term lt
+        where lt.is_deleted = 0
+          and lt.id in (select lease_term_id
+                        from room_lease_term rlt
+                        where rlt.is_deleted = 0
+                          and rlt.room_id = #{id})
+    </select>
 </mapper>

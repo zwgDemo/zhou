@@ -22,9 +22,18 @@
         update_time,is_deleted
     </sql>
     <select id="selectListByItemTypeAndId" resultType="com.atguigu.lease.web.admin.vo.graph.GraphVo">
-        select name,url
-        from graph_info
-        where is_deleted = 0 and item_type=#{itemType} and item_id=#{id}
+        select name, url
+        from graph_info gi
+        where gi.is_deleted = 0
+          and gi.item_type = #{itemType}
+          and gi.item_id = #{id}
+    </select>
+    <select id="selectGraphVoByItemTypeAndId" resultType="com.atguigu.lease.web.admin.vo.graph.GraphVo">
+        select name, url
+        from graph_info gi
+        where gi.is_deleted = 0
+          and gi.item_type = #{itemType}
+          and gi.item_id = #{id}
     </select>
 
 

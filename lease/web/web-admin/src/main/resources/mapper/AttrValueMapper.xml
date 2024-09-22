@@ -5,19 +5,36 @@
 <mapper namespace="com.atguigu.lease.web.admin.mapper.AttrValueMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.lease.model.entity.AttrValue">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="attrKeyId" column="attr_key_id" jdbcType="BIGINT"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="attrKeyId" column="attr_key_id" jdbcType="BIGINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,attr_key_id,
+        id
+        ,name,attr_key_id,
         create_time,update_time,is_deleted
     </sql>
-    <update id="removeKeyValue" >
-        UPDATE attr_value SET update_time=now(), is_deleted=1 WHERE is_deleted=0 AND (attr_key_id = #{attrKeyId})
+    <update id="removeKeyValue">
+        UPDATE attr_value
+        SET update_time=now(),
+            is_deleted=1
+        WHERE is_deleted = 0
+          AND (attr_key_id = #{attrKeyId})
     </update>
+    <select id="selectAttrValueVoById" resultType="com.atguigu.lease.web.admin.vo.attr.AttrValueVo">
+
+        select av.id, av.name , av.attr_key_id,  ak.name attr_key_name
+        from attr_value av
+                 left join attr_key ak on av.attr_key_id = ak.id and ak.is_deleted = 0
+        where av.is_deleted = 0
+          and av.id in
+              (select rav.attr_value_id
+               from room_attr_value rav
+               where rav.is_deleted = 0
+                 and rav.room_id = #{id});
+    </select>
 </mapper>

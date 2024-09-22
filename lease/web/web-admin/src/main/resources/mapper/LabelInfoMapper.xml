@@ -20,10 +20,22 @@
     </sql>
     <select id="selectListById" resultType="com.atguigu.lease.model.entity.LabelInfo">
         select id, type, name
-        from label_info
-        where is_deleted=0 and id in (select label_id
-                     from apartment_label
-                     where is_deleted=0
-                       and id = #{id})
+        from label_info li
+        where is_deleted = 0
+          and li.id in (select label_id
+                        from apartment_label al
+                        where is_deleted = 0
+                          and al.apartment_id = #{id})
     </select>
+    <select id="selectLabelById" resultType="com.atguigu.lease.model.entity.LabelInfo">
+        select id, type, name
+        from label_info li
+        where is_deleted = 0
+          and li.id in (select label_id
+                     from room_label rl
+                     where is_deleted = 0
+                       and rl.room_id = #{id})
+    </select>
+
+
 </mapper>

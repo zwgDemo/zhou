@@ -14,6 +14,8 @@ import java.util.List;
 */
 public interface AttrValueMapper extends BaseMapper<AttrValue> {
     void removeKeyValue(Long attrKeyId);
+
+    List<AttrValueVo> selectAttrValueVoById(Long id);
 }
 
 

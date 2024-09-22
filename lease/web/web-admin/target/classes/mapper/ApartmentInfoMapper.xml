@@ -5,27 +5,28 @@
 <mapper namespace="com.atguigu.lease.web.admin.mapper.ApartmentInfoMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.lease.model.entity.ApartmentInfo">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="introduction" column="introduction" jdbcType="VARCHAR"/>
-            <result property="districtId" column="district_id" jdbcType="BIGINT"/>
-            <result property="districtName" column="district_name" jdbcType="VARCHAR"/>
-            <result property="cityId" column="city_id" jdbcType="BIGINT"/>
-            <result property="cityName" column="city_name" jdbcType="VARCHAR"/>
-            <result property="provinceId" column="province_id" jdbcType="BIGINT"/>
-            <result property="provinceName" column="province_name" jdbcType="VARCHAR"/>
-            <result property="addressDetail" column="address_detail" jdbcType="VARCHAR"/>
-            <result property="latitude" column="latitude" jdbcType="VARCHAR"/>
-            <result property="longitude" column="longitude" jdbcType="VARCHAR"/>
-            <result property="phone" column="phone" jdbcType="VARCHAR"/>
-            <result property="isRelease" column="is_release" jdbcType="TINYINT"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="introduction" column="introduction" jdbcType="VARCHAR"/>
+        <result property="districtId" column="district_id" jdbcType="BIGINT"/>
+        <result property="districtName" column="district_name" jdbcType="VARCHAR"/>
+        <result property="cityId" column="city_id" jdbcType="BIGINT"/>
+        <result property="cityName" column="city_name" jdbcType="VARCHAR"/>
+        <result property="provinceId" column="province_id" jdbcType="BIGINT"/>
+        <result property="provinceName" column="province_name" jdbcType="VARCHAR"/>
+        <result property="addressDetail" column="address_detail" jdbcType="VARCHAR"/>
+        <result property="latitude" column="latitude" jdbcType="VARCHAR"/>
+        <result property="longitude" column="longitude" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="isRelease" column="is_release" jdbcType="TINYINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,introduction,
+        id
+        ,name,introduction,
         district_id,district_name,city_id,
         city_name,province_id,province_name,
         address_detail,latitude,longitude,
@@ -94,5 +95,24 @@
         and status in (2, 5)
         group by apartment_id) cc
         on ai.id = cc.apartment_id
+    </select>
+    <select id="selectApartmentById" resultType="com.atguigu.lease.model.entity.ApartmentInfo">
+        select id,
+               name,
+               introduction,
+               district_id,
+               district_name,
+               city_id,
+               city_name,
+               province_id,
+               province_name,
+               address_detail,
+               latitude,
+               longitude,
+               phone,
+               is_release
+        from apartment_info ai
+        where ai.is_deleted = 0
+          and id = (select apartment_id from room_info ri where ri.is_deleted = 0 and ri.id = #{id})
     </select>
 </mapper>

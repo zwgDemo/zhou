@@ -5,18 +5,28 @@
 <mapper namespace="com.atguigu.lease.web.admin.mapper.PaymentTypeMapper">
 
     <resultMap id="BaseResultMap" type="com.atguigu.lease.model.entity.PaymentType">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="payMonthCount" column="pay_month_count" jdbcType="INTEGER"/>
-            <result property="additionalInfo" column="additional_info" jdbcType="VARCHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="payMonthCount" column="pay_month_count" jdbcType="INTEGER"/>
+        <result property="additionalInfo" column="additional_info" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,pay_month_count,
+        id
+        ,name,pay_month_count,
         additional_info,create_time,update_time,
         is_deleted
     </sql>
+    <select id="selectPaymentTypeListById" resultType="com.atguigu.lease.model.entity.PaymentType">
+        select id, name, pay_month_count, additional_info
+        from payment_type pt
+        where pt.is_deleted = 0
+          and pt.id in (select payment_type_id
+                        from room_payment_type rpt
+                        where rpt.is_deleted = 0
+                          and rpt.room_id = #{id})
+    </select>
 </mapper>

@@ -50,6 +50,15 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
     private RoomInfoMapper roomInfoMapper;
 
     @Resource
+    private ProvinceInfoMapper provinceInfoMapper;
+
+    @Resource
+    private CityInfoMapper cityInfoMapper;
+
+    @Resource
+    private DistrictInfoMapper districtInfoMapper;
+
+    @Resource
     private GraphInfoService graphInfoService;
 
     @Resource
@@ -64,6 +73,17 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
 
     @Override
     public void saveOrUpdateApartmentInfo(ApartmentSubmitVo apartmentSubmitVo) {
+        //此处由于前段没有将地区名称传给我们后台，所以我们需要在后端自己根据地区ID查询名称传入apartmentSubmitVo
+        DistrictInfo districtInfo = districtInfoMapper.selectById(apartmentSubmitVo.getDistrictId());
+        apartmentSubmitVo.setDistrictName(districtInfo.getName());
+
+        CityInfo cityInfo = cityInfoMapper.selectById(apartmentSubmitVo.getCityId());
+        apartmentSubmitVo.setCityName(cityInfo.getName());
+
+        ProvinceInfo provinceInfo = provinceInfoMapper.selectById(apartmentSubmitVo.getProvinceId());
+        apartmentSubmitVo.setProvinceName(provinceInfo.getName());
+
+
         boolean isUpdate =apartmentSubmitVo.getId()!=null;
         super.saveOrUpdate(apartmentSubmitVo);
             if(!isUpdate){
@@ -153,7 +173,7 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
 
     @Override
     public IPage<ApartmentItemVo> ApartmentQueryPage(IPage<ApartmentItemVo> apartmentInfoPage, ApartmentQueryVo queryVo) {
-        return apartmentInfoMapper.ApartmentQueryPage(apartmentInfoPage,queryVo);
+        return apartmentInfoMapper.ApartmentQueryPage(apartmentInfoPage, queryVo);
     }
 
     @Override

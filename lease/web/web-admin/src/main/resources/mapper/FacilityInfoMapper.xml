@@ -22,9 +22,23 @@
     </sql>
     <select id="selectListById" resultType="com.atguigu.lease.model.entity.FacilityInfo">
         select id, type, name, icon
-        from facility_info
-        where is_deleted = 0
-          and id in (select facility_id from apartment_facility where is_deleted = 0 and id = #{id})
+        from facility_info fi
+        where fi.is_deleted = 0
+          and fi.id in (select facility_id
+                     from apartment_facility af
+                     where af.is_deleted = 0
+                       and af.apartment_id = #{id})
 
     </select>
+    <select id="selectFacilityInfoList" resultType="com.atguigu.lease.model.entity.FacilityInfo">
+        select id, type, name, icon
+        from facility_info fi
+        where fi.is_deleted = 0
+          and fi.id in (select facility_id
+                        from room_facility rf
+                        where rf.is_deleted = 0
+                          and rf.room_id = #{id})
+    </select>
+
+
 </mapper>
