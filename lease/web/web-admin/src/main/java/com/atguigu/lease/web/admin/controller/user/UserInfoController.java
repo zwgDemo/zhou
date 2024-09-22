@@ -27,8 +27,9 @@ public class UserInfoController {
     public Result<IPage<UserInfo>> pageUserInfo(@RequestParam long current, @RequestParam long size, UserInfoQueryVo queryVo) {
         IPage<UserInfo> page = new Page<>(current, size);
         LambdaQueryWrapper<UserInfo> userInfoQueryWrapper = new LambdaQueryWrapper<>();
-        userInfoQueryWrapper.like(UserInfo::getPhone,queryVo.getPhone());
-        userInfoQueryWrapper.eq(UserInfo::getStatus,queryVo.getStatus());
+        //此处要记得判断前端传不传值的问题
+        userInfoQueryWrapper.like(queryVo.getPhone() != null, UserInfo::getPhone, queryVo.getPhone());
+        userInfoQueryWrapper.eq(queryVo.getStatus() != null, UserInfo::getStatus, queryVo.getStatus());
         IPage<UserInfo> userInfoIPage = userInfoService.page(page, userInfoQueryWrapper);
         return Result.ok(userInfoIPage);
     }
@@ -37,8 +38,8 @@ public class UserInfoController {
     @PostMapping("updateStatusById")
     public Result updateStatusById(@RequestParam Long id, @RequestParam BaseStatus status) {
         LambdaUpdateWrapper<UserInfo> userInfoLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-        userInfoLambdaUpdateWrapper.eq(UserInfo::getId,id);
-        userInfoLambdaUpdateWrapper.set(UserInfo::getStatus,status);
+        userInfoLambdaUpdateWrapper.eq(UserInfo::getId, id);
+        userInfoLambdaUpdateWrapper.set(UserInfo::getStatus, status);
         userInfoService.update(userInfoLambdaUpdateWrapper);
         return Result.ok();
     }
