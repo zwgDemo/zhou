@@ -18,6 +18,13 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  data:
+    redis:
+      host: 192.168.3.129
+      password: 123456
+      port: 6380
+      database: 0
+
 
 #用于打印框架生成的sql语句，便于调试
 mybatis-plus:
@@ -29,5 +36,7 @@ minio:
   accessKey: minioadmin
   secretKey: minioadmin
   bucketName: house
-springdoc:
+
+springdoc:   # 这个是设置swaager 传入多个参数时让折叠的参数列表展开
   default-flat-param-object: true
+
