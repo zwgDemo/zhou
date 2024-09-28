@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.lease.web.app.mapper.LeaseAgreementMapper">
+
+
+    <resultMap id="AgreementItemVoMap" type="com.atguigu.lease.web.app.vo.agreement.AgreementItemVo" autoMapping="true">
+        <id property="id" column="id"/>
+        <collection property="roomGraphVoList" ofType="com.atguigu.lease.web.app.vo.graph.GraphVo" autoMapping="true"/>
+    </resultMap>
+
+    <select id="getListItem" resultMap="AgreementItemVoMap">
+        select la.id,
+               la.lease_start_date,
+               la.lease_end_date,
+               la.rent,
+               la.status                                                           lease_status,
+               la.source_type,
+               ri.room_number,
+               ai.name                                                             apartment_name,
+               gi.name,
+               gi.url,
+--                此处判断是否可以续约，租约处于已签约且已签约的数量为1条并且没有续约待确定的
+               if(status = 2 and cnt.signed = 1 and cnt.renewing = 0, true, false) is_renewable
+        from lease_agreement la
+                 left join room_info ri on la.room_id = ri.id and ri.is_deleted = 0
+                 left join apartment_info ai on la.apartment_id = ai.id and ai.is_deleted = 0
+                 left join graph_info gi on ri.id = gi.item_id and gi.item_type = 2 and gi.is_deleted = 0
+                 left join (
+            select sum(if(status = 2, 1, 0)) signed, sum(if(status = 7, 1, 0)) renewing
+            from lease_agreement
+            where is_deleted = 0
+              and phone = #{phone}
+        ) cnt on true
+        order by la.create_time desc
+
+
+    </select>
+</mapper>

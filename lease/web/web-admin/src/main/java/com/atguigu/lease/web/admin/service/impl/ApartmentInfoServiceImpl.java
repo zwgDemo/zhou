@@ -86,7 +86,7 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
 
         boolean isUpdate =apartmentSubmitVo.getId()!=null;
         super.saveOrUpdate(apartmentSubmitVo);
-            if(!isUpdate){
+            if(isUpdate){
             //先删除列表信息，再去上传新的列表信息
             //图片的删除
             LambdaQueryWrapper<GraphInfo> graphQueryWrapper = new LambdaQueryWrapper<>();
@@ -143,7 +143,6 @@ public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, A
 
 
         //添加标签信息
-
         List<Long> labelIds = apartmentSubmitVo.getLabelIds();
         if (!CollectionUtils.isEmpty(labelIds)){
             ArrayList<ApartmentLabel> apartmentLabels = new ArrayList<>();

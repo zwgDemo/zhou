@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.lease.web.app.mapper.GraphInfoMapper">
+
+
+    <select id="selectGraphVoById" resultType="com.atguigu.lease.web.app.vo.graph.GraphVo">
+        select url, name
+        from graph_info
+        where is_deleted = 0
+          and graph_info.item_type= #{itemType}
+          and graph_info.item_id = #{id}
+    </select>
+</mapper>
