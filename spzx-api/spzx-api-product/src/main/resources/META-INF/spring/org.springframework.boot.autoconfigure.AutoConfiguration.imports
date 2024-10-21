@@ -1,0 +1,3 @@
+com.spzx.product.api.RemoteCategoryFallbackFactory
+com.spzx.product.api.RemoteProductFallbackFactory
+com.spzx.product.api.RemoteBrandFallbackFactory

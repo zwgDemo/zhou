@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spzx.product.mapper.BrandMapper">
+
+    <delete id="deleteBrandByIds">
+        update brand set del_flag = '2' where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")" >
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateBrand" parameterType="com.spzx.product.domain.Brand">
+        update brand
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="logo != null and logo != ''">logo = #{logo},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+
+    <insert id="addBrand" parameterType="com.spzx.product.domain.Brand" useGeneratedKeys="true" keyProperty="id">
+        insert into brand(
+        <if test="id != null and id != 0">id,</if>
+        <if test="name != null and name != ''">name,</if>
+        <if test="logo != null and logo != ''">logo,</if>
+        <if test="remark != null and remark != ''">remark,</if>
+        <if test="createBy != null and createBy != ''">create_by,</if>
+        create_time
+        )values(
+        <if test="id != null and id != 0">#{id},</if>
+        <if test="name != null and name != ''">#{name},</if>
+        <if test="logo != null and logo != ''">#{logo},</if>
+        <if test="remark != null and remark != ''">#{remark},</if>
+        <if test="createBy != null and createBy != ''">#{createBy},</if>
+        sysdate()
+        )
+    </insert>
+
+    <!--//根据id查询品牌-->
+    <select id="getBrand" resultType="com.spzx.product.domain.Brand">
+        select id, name, logo, create_by, create_time, update_by, update_time, del_flag, remark
+        from brand
+        where id = #{id}
+    </select>
+
+    <!--//分页查询品牌列表-->
+    <select id="selectBrandList"  resultType="com.spzx.product.domain.Brand">
+        select id, name, logo, create_by, create_time, update_by, update_time, del_flag, remark
+        from brand
+        <where>
+            <if test="name != null  and name != ''">
+                and name like concat('%',#{name},'%')
+            </if>
+            and del_flag = 0
+        </where>
+    </select>
+</mapper>
