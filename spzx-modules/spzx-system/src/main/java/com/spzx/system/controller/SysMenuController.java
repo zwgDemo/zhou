@@ -1,6 +1,8 @@
 package com.spzx.system.controller;
 
 import java.util.List;
+
+import com.spzx.common.security.annotation.RequiresLogin;
 import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -149,6 +151,8 @@ public class SysMenuController extends BaseController
      *
      * @return 路由信息
      */
+    @RequiresLogin
+    @Log(title = "getRouters",isSaveResponseData = true,isSaveRequestData = true)
     @GetMapping("getRouters")
     public AjaxResult getRouters()
     {

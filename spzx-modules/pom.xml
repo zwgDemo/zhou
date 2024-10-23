@@ -16,6 +16,7 @@
         <module>spzx-product</module>
         <module>spzx-user</module>
         <module>spzx-channel</module>
+        <module>spzx-test</module>
     </modules>
 
     <artifactId>spzx-modules</artifactId>
