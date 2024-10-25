@@ -27,4 +27,7 @@ public interface ProductService extends IService<Product> {
     List<ProductSku> selectProductSkuList(SkuQuery skuQuery);
 
 
+    void updateAuditStatus(Long productId, Integer status);
+
+    void updateStatus(Long productId, Integer status);
 }

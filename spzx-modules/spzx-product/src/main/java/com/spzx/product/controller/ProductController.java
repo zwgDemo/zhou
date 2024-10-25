@@ -99,4 +99,57 @@ public class ProductController extends BaseController {
         return R.ok(dataTable);
     }
 
+    @GetMapping("updateAuditStatus/{productId}/{status}")
+    public AjaxResult updateAuditStatus(@PathVariable Long productId,@PathVariable Integer status){
+        productService.updateAuditStatus(productId,status);
+        return AjaxResult.success("修改成功");
+    }
+
+
+    @GetMapping("updateStatus/{productId}/{status}")
+    public AjaxResult updateStatus(@PathVariable Long productId,@PathVariable Integer status){
+        productService.updateStatus(productId,status);
+        return AjaxResult.success("刚刚上架成功");
+    }
+
+
+    @InnerAuth
+    @GetMapping("/getProductSku/{skuId}")
+    public R<ProductSku> getProductSku(@PathVariable("skuId") Long skuId) {
+        return R.ok(null);
+    }
+
+
+    @InnerAuth
+    @GetMapping(value = "/getProduct/{id}")
+    public R<Product> getProduct(@PathVariable("id") Long id){
+        return R.ok(null);
+    }
+
+    @InnerAuth
+    @GetMapping(value = "/getSkuPrice/{skuId}")
+    public R<SkuPrice> getSkuPrice(@PathVariable("skuId") Long skuId){
+        return R.ok(null);
+    }
+
+    @InnerAuth
+    @GetMapping(value = "/getProductDetails/{id}")
+    public R<ProductDetails> getProductDetails(@PathVariable("id") Long id){
+        return R.ok(null);
+    }
+
+    @InnerAuth
+    @GetMapping(value = "/getSkuSpecValue/{id}")
+    public R<Map<String, Long>> getSkuSpecValue(@PathVariable("id") Long id){
+        return R.ok(null);
+    }
+
+    @InnerAuth
+    @GetMapping(value = "/getSkuStock/{skuId}")
+    public R<SkuStockVo> getSkuStock(@PathVariable("skuId") Long skuId){
+        return R.ok(null);
+    }
+
+
+
 }
