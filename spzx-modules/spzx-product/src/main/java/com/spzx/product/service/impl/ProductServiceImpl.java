@@ -244,6 +244,21 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         return productSkuMapper.selectProductSkuList(skuQuery);
     }
 
+    @Override
+    public void updateAuditStatus(Long productId, Integer status) {
+        Product product = baseMapper.selectById(productId);
+        product.setAuditStatus(status);
+        product.setAuditMessage("刚刚审核通过");
+        baseMapper.updateById(product);
+    }
+
+    @Override
+    public void updateStatus(Long productId, Integer status) {
+        Product product = baseMapper.selectById(productId);
+        product.setStatus(status);
+        baseMapper.updateById(product);
+    }
+
     @GuiguCache(prefix = "product:")
     public ProductSku getProductSku(Long skuId) {
         return productSkuMapper.selectById(skuId);
